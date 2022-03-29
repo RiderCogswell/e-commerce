@@ -4,10 +4,11 @@
   ## Description
   Backend development of a E-Commerce web application using Node, Express, MySql2, dotenv, and Sequelize to perform CRUD functions, which can be queried through Insomnia (or on a browser).
 
-  ## Walkthrough
+  ## Walkthrough Link
+https://www.youtube.com/watch?v=TIaM7a2q8ZI
   ## Table of Contents
   - [Installation](#installation)
-  - [Walkthrough](#walkthrough)
+  - [Walkthrough](#walkthrough-link)
   - [Questions](#questions)
 
   ## Installation
