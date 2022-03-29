@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { json } = require('express/lib/response');
 const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
@@ -6,12 +7,69 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 // get all products
 router.get('/', (req, res) => {
   // find all products
+  Product.findAll({
+    attributes: [
+      'id',
+      'product_name',
+      'price',
+      'stock',
+      'category_id'
+    ],
+    include: [
+      {
+        model: Category,
+        attributes: ['id', 'category_name']
+      },
+      {
+        model: Tag,
+        attributes: ['id', 'tag_name']
+      }
+    ]
+  })
+  .then(dbProductData => res.json(dbProductData))
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  })
   // be sure to include its associated Category and Tag data
 });
 
 // get one product
 router.get('/:id', (req, res) => {
   // find a single product by its `id`
+  Product.findOne({
+    attributes: [
+      'id',
+      'product_name',
+      'price',
+      'stock',
+      'category_id'
+    ],
+    where: {
+      id: req.params.id
+    },
+    include: [
+      {
+        model: Category,
+        attributes: ['id', 'category_name']
+      },
+      {
+        model: Tag,
+        attributes: ['id', 'tag_name']
+      }
+    ]
+  })
+  .then(dbProductData => {
+    if (!dbProductData) {
+      res.status(404).json({ message: 'No user found with this id' });
+      return;
+    }
+    res.json(dbProductData);
+  })
+  .catch(err => {
+    console.log(err);
+    json.status(500).json(err);
+  })
   // be sure to include its associated Category and Tag data
 });
 
@@ -91,6 +149,22 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
+  Product.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+    .then(dbProductData => {
+      if (!dbProductData) {
+        res.status(404).json({ message: 'No user found with this id' });
+        return;
+      }
+      res.json(dbProductData);
+    })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      })
 });
 
 module.exports = router;
